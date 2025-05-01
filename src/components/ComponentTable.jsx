@@ -47,7 +47,7 @@ const ComponentTable = ({ columns, data }) => {
               {columns.map((col, colIndex) => (
                 col.render? React.cloneElement(col.render(row), { key: colIndex }) : (
                   <td key={colIndex}
-                    className={`py-3 px-4 text-base font-semibold text-gray-200 ${
+                    className={`py-3 px-4 text-base font-semibold text-gray-200 max-w-35 overflow-hidden text-ellipsis ${
                       col.type === "textarea" ? "whitespace-pre-wrap break-words min-w-50" : ""
                     }`}
                   >
