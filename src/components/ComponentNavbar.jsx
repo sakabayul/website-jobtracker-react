@@ -11,7 +11,7 @@ export default function ComponentNavbar() {
   }
   const navigation = [
     { name: 'Dashboard', href: '#', current: useLocation().pathname === "/" },
-    { name: 'Data List', href: '#/data-list', current: useLocation().pathname === "/data-list" },
+    { name: 'Find a Jobs', href: '#/find-jobs', current: useLocation().pathname === "/find-jobs" },
     { name: 'Projects', href: '#/projects', current: useLocation().pathname === "/projects" },
     { name: 'Calendar', href: '#/calendar', current: useLocation().pathname === "/calendar" },
     { name: 'Reports', href: '#/reports', current: useLocation().pathname === "/reports" },

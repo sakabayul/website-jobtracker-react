@@ -1,63 +1,111 @@
-const ComponentTable = ({prDtTable, actions}) => {
-  const statusClassMap = {
-    Approved: "dark:bg-green-700",
-    Pending: "dark:bg-orange-600",
-    Expired: "dark:bg-gray-600",
-    Denied: "dark:bg-red-700",
+import React from 'react';
+
+const ComponentTable = ({ columns, data }) => {
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const rowsPerPage = 10;
+  const totalData = data.length;
+  const totalPages = Math.ceil(totalData / rowsPerPage);
+  const startIdx = (currentPage - 1) * rowsPerPage;
+  const endIdx = Math.min(startIdx + rowsPerPage, totalData);
+  const currentData = data.slice(startIdx, endIdx);
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
-  
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  React.useEffect(() => {
+    if (currentData.length === 0 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  }, [currentData, currentPage]);
   return (
     <div className="mx-auto pb-8 w-full max-w-7xl overflow-x-auto">
       <table className="px-4 min-w-full rounded-md border border-gray-200 overflow-hidden">
-
         {/* :TABLE HEAD */}
         <thead className="min-w-full bg-gray-800 text-left text-gray-100">
           <tr>
-            {prDtTable.Header?.map((__, index) => (
-              <th key={index} className="py-3 px-4 text-sm font-medium uppercase tracking-wide" scope="col">{ prDtTable.Header[index].text }</th>
+            {columns.map((col, idx) => (
+              <th
+                key={idx}
+                className={`py-3 px-4 text-sm font-medium tracking-wide ${
+                  col.label === "Actions" ? "text-center" : ""
+                }`}
+              >
+                {col.label}
+              </th>
             ))}
-            {actions && (
-              <th className="py-3 px-4 text-center text-sm font-medium uppercase tracking-wide" scope="col">Actions</th>
-            )}
           </tr>
         </thead>
 
-
         {/* :TABLE BODY */}
-        <tbody className="">
-          {prDtTable.Body?.map((user, index) => (
-            <tr key={index} className={`${index % 2 === 0 ? "bg-gray-700" : "bg-gray-800"} whitespace-nowrap hover:bg-gray-700`}>
-              {prDtTable.Header?.map((user2, index2) => {
-                const value = user[index2];
-                const statusKeys = Object.keys(statusClassMap);
-
-                return statusKeys.includes(value) ? (
-                  <td key={index2} className="py-3 px-4 text-xs text-gray-400 font-medium">
-                    <span className={`px-2 py-1 font-semibold leading-tight text-white rounded-full ${statusClassMap[value]}`}>
-                      {value}
-                    </span>
+        <tbody>
+          {currentData.map((row, rowIndex) => (
+            <tr key={rowIndex} className={`${rowIndex % 2 === 0 ? "bg-gray-700" : "bg-gray-800"} whitespace-nowrap hover:bg-gray-700`}>
+              {columns.map((col, colIndex) => (
+                col.render? React.cloneElement(col.render(row), { key: colIndex }) : (
+                  <td key={colIndex}
+                    className={`py-3 px-4 text-base font-semibold text-gray-200 ${
+                      col.type === "textarea" ? "whitespace-pre-wrap break-words min-w-50" : ""
+                    }`}
+                  >
+                    {col.type === "url" && row[col.key] ? (
+                      <a
+                        href={row[col.key]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 underline hover:text-blue-600"
+                      >
+                        Link
+                      </a>
+                    ) : col.type === "textarea" ? (
+                      <span title={row[col.key]}>
+                        {row[col.key]?.length > 100
+                          ? row[col.key].slice(0, 100) + "..."
+                          : row[col.key]}
+                      </span>
+                    ) : (
+                      row[col.key]
+                    )}
                   </td>
-                ) : (
-                  <td key={index2} className="py-3 px-4 text-base text-gray-200 font-semibold">
-                    {value}
-                  </td>
-                );
-              })}
-              {/* ::Action Buttons */}
-              {actions && (
-                <td className="py-3 px-4 flex justify-around items-center space-x-6 text-base text-gray-700 font-medium">
-                  <button type="button" className="text-sm text-indigo-400 font-semibold hover:underline hover:text-indigo-500 cursor-pointer">Edit</button>
-                  <button type="button" className="text-sm text-red-400 font-semibold hover:text-red-500 cursor-pointer">Delete</button>
-                </td>
-              )}
+                )
+              ))}
             </tr>
-          ))
-          }
+          ))}
         </tbody>
-
       </table>
+
+      {/* Pagination Info & Controls */}
+      <div className="flex items-center justify-between mt-4 text-sm">
+        <div className='text-gray-800'>
+          {totalData === 0? "Empty" :`Showing ${startIdx + 1} ${currentData.length === 1? "" : "to " + endIdx} of ${totalData} entries`}
+        </div>
+        {totalData >= 11 && (
+          <div className="flex gap-2">
+            <button
+              onClick={handlePrev}
+              disabled={currentPage === 1}
+              className={`px-3 py-1 rounded text-gray-200 cursor-pointer ${currentPage === 1 ? "bg-gray-500 cursor-not-allowed" : "bg-gray-700 hover:bg-gray-600"}`}
+            >
+              Previous
+            </button>
+            <span className="px-3 py-1 text-gray-800">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+              className={`px-3 py-1 rounded text-gray-200 cursor-pointer ${currentPage === totalPages ? "bg-gray-500 cursor-not-allowed" : "bg-gray-700 hover:bg-gray-600"}`}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
     </div>
-  )
+  );
 };
 
 export default ComponentTable;

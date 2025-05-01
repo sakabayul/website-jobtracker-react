@@ -1,10 +1,201 @@
-const PageCalendar = () => {
+import React, { useEffect, useState, useRef } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import listPlugin from '@fullcalendar/list';
+import { ChevronDownIcon } from '@heroicons/react/16/solid'
+import { v4 as uuidv4 } from "uuid";
+import ComponentModal from "../components/ComponentModal";
 
+const PageCalender = () => {
+  const [data, setData] = React.useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [clickedDate, setClickedDate] = useState("");
+  const [currentView, setCurrentView] = useState('dayGridMonth');
+  const [isMobile, setIsMobile] = useState(false);
+  const calendarRef = useRef();
+  const usedColorsRef = useRef([]);
+
+  const saveJobsToStorage = (data) => {
+    localStorage.setItem('calendarEvents', JSON.stringify(data));
+  };
+
+  const formatToDatetimeLocal = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  const handleChangeView = (e) => {
+    const selectedView = e.target.value;
+    setCurrentView(selectedView);
+    calendarRef.current.getApi().changeView(selectedView);
+  };
+
+  const handleDateClick = (arg) => {
+    const fullDate = formatToDatetimeLocal(arg.dateStr);
+    setClickedDate(fullDate);
+    setSelectedEvent(null);
+    setShowModal(true);
+  };
+
+  const handleEventClick = (clickInfo) => {
+    const eventData = data.find(e => e.id === clickInfo.event.id);
+    setSelectedEvent(eventData);
+    setShowModal(true);
+  };
+
+  const handleEventDrop = (dropInfo) => {
+    const updated = data.map(ev =>
+      ev.id === dropInfo.event.id
+        ? {
+            ...ev,
+            start: formatToDatetimeLocal(dropInfo.event.startStr),
+            end: formatToDatetimeLocal(dropInfo.event.endStr),
+          }
+        : ev
+    );
+    setData(updated);
+    saveJobsToStorage(updated);
+  };
+
+  useEffect(() => {
+    const saved = localStorage.getItem('calendarEvents');
+    if (saved) setData(JSON.parse(saved));
+
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleSave = (row) => {
+    let updatedJobs;
+
+    if (data.find((j) => j.id === row.id)) {
+      // Update
+      updatedJobs = data.map((j) => (j.id === row.id ? row : j));
+    } else {
+      // Tambah
+      row.id = uuidv4();
+      row.backgroundColor = getColor(); // Tambahkan warna
+      updatedJobs = [...data, row];
+    }
+    setData(updatedJobs);
+    saveJobsToStorage(updatedJobs);
+    setShowModal(false);
+  };
+
+  const handleDelete = (row) => {
+    console.log("row:", row);
+    if (confirm(`Yakin hapus data: ${row.title}?`)) {
+      const updatedJobs = data.filter((j) => j.id !== row.id);
+      setData(updatedJobs);
+      saveJobsToStorage(updatedJobs);
+      setShowModal(false);
+    }
+  };
+  
+  const getColor = () => {
+    const darkColors = [
+      '#1E1E2F', '#2C3E50', '#34495E', '#4B0082', '#2F4F4F',
+      '#483D8B', '#191970', '#3B3B98', '#2C2C54', '#3A3A3C',
+      '#455A64', '#4A235A', '#7B241C', '#512E5F', '#784212',
+    ];
+
+    if (usedColorsRef.current.length === darkColors.length) {
+      usedColorsRef.current = [];
+    }
+
+    const availableColors = darkColors.filter(
+      (color) => !usedColorsRef.current.includes(color)
+    );
+
+    const randomIndex = Math.floor(Math.random() * availableColors.length);
+    const chosenColor = availableColors[randomIndex];
+    usedColorsRef.current.push(chosenColor);
+
+    return chosenColor;
+  };
+
+  const fields = [
+    { label: "Title", name: "title", required: true },
+    { label: "Description", name: "description", type: "text", required: true },
+    { label: "Start", name: "start", type: "datetime-local", defaultValue: clickedDate, required: true, disabled: selectedEvent? false : true },
+    { label: "End", name: "end", type: "datetime-local", defaultValue: clickedDate, required: false, disabled: false }
+  ];
   return (
-    <>
-      <h1>Page Calendar</h1>
-    </>
+    <div className="p-4">
+      {isMobile && (
+        <div className="sm:col-span-3 mb-4">
+          <label htmlFor="country" className="block text-sm/6 font-medium text-gray-900">
+            
+          </label>
+          <div className="mt-2 grid grid-cols-1">
+            <select
+              value={currentView}
+              onChange={handleChangeView}
+              className="col-start-1 row-start-1 w-full appearance-none rounded bg-white px-3 py-2 text-base outline-1 -outline-offset-1 outline-black focus:outline-2"
+            >
+              <option value="dayGridMonth">📅 Bulan</option>
+              <option value="listMonth">📋 List Bulan Ini</option>
+            </select>
+            <ChevronDownIcon
+              aria-hidden="true"
+              className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+            />
+          </div>
+        </div>
+      )}
+
+      <FullCalendar
+        ref={calendarRef}
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
+        initialView={currentView}
+        editable
+        selectable
+        events={data}
+        dateClick={handleDateClick}
+        eventClick={handleEventClick}
+        eventDrop={handleEventDrop}
+        headerToolbar={{
+          left: 'prev,next today',
+          center: 'title',
+          right: isMobile ? false : 'timeGridDay,timeGridWeek,dayGridMonth,listMonth',
+        }}
+        buttonText={{
+          today: 'Today',
+          timeGridDay: 'Day',
+          timeGridWeek: 'Week',
+          dayGridMonth: 'Month',
+          listMonth: 'List'
+        }}
+        eventTimeFormat={{
+          hour: '2-digit',
+          minute: '2-digit',
+          meridiem: 'short', // Untuk AM/PM
+          hour12: true       // Format 12 jam
+        }}
+        height="auto"
+      />
+
+      {showModal && (
+        <ComponentModal
+          onClose={() => setShowModal(false)}
+          fields={fields}
+          onSave={handleSave}
+          onDelete={handleDelete}
+          fromData={selectedEvent}
+        />
+      )}
+    </div>
   );
 };
 
-export default PageCalendar;
+export default PageCalender;

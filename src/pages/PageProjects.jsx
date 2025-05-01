@@ -1,8 +1,10 @@
+import PageProjectsA from "../components/PageProjects/PageProjectsA";
+
 const PageProjects = () => {
 
   return (
     <>
-      <h1>Page Projects</h1>
+      <PageProjectsA />
     </>
   );
 };

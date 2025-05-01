@@ -2,11 +2,10 @@ import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import ComponentNavbar from './components/ComponentNavbar';
 import PageMain from './pages/PageMain';
-import PageDataList from './pages/PageDataList';
+import PageFindJobs from './pages/PageFindJobs';
 import PageProjects from './pages/PageProjects';
 import PageCalendar from './pages/PageCalendar';
 import PageReports from './pages/PageReports';
-import PageCreateAndEdit from './pages/PageCreateAndEdit';
 import Page404 from './pages/Page404';
 import './app.css'
 
@@ -27,13 +26,11 @@ const App = () => {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <Routes>
             <Route path="/" element={<PageMain />} />
-            <Route path="/data-list" element={<PageDataList />} />
+            <Route path="/find-jobs" element={<PageFindJobs />} />
             <Route path="/projects" element={<PageProjects />} />
             <Route path="/calendar" element={<PageCalendar />} />
             <Route path="/reports" element={<PageReports />} />
-            <Route path="/create" element={<PageCreateAndEdit />} />
-            <Route path="/edit/:id" element={<PageCreateAndEdit />} />
-            <Route path="/error" element={<Page404 />} />
+            <Route path="*" element={<Page404 />} />
           </Routes>
         </div>
       </main>
