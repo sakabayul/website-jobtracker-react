@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import ComponentButton from "./ComponentButton";
 
 const ComponentModalJob = ({ onClose, onSave, onDelete, fromData, fields }) => {
-  const [data, setData] = useState({});
+  const [data, setData] = React.useState({});
 
-  useEffect(() => {
+  React.useEffect(() => {
     const defaultData = {};
     fields.forEach((field) => {
       if (fromData) {
@@ -34,16 +34,18 @@ const ComponentModalJob = ({ onClose, onSave, onDelete, fromData, fields }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/70">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md">
+      <div className="bg-white p-6 rounded-lg w-full max-w-md sm:max-h-none sm:overflow-visible max-h-150 overflow-auto">
         <h2 className="text-xl font-semibold mb-4">
           {fromData ? "Edit Job" : "Add Job"}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-3">
           {fields.map((field) => (
             <div key={field.name}>
-              <label className="block text-sm font-medium mb-1">
-                {field.label}
-              </label>
+              {!field.hidden && (
+                <label className="block text-sm font-medium mb-1">
+                  {field.label}
+                </label>
+              )}
               {field.type === "select" ? (
                 <div className="mt-2 grid grid-cols-1">
                   <select
@@ -79,6 +81,7 @@ const ComponentModalJob = ({ onClose, onSave, onDelete, fromData, fields }) => {
                 />
               ) : (
                 <input
+                  hidden={field.hidden}
                   type={field.type || "text"}
                   name={field.name}
                   placeholder={field.label}

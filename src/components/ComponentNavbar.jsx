@@ -18,7 +18,7 @@ export default function ComponentNavbar() {
   ]
   const userNavigation = [
     { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
+    { name: 'Settings', href: '#/setting' },
     { name: 'Sign out', href: '#' },
   ]
   
@@ -63,7 +63,7 @@ export default function ComponentNavbar() {
                     type="button"
                     className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
                   >
-                    <span className="absolute -inset-1.5" />
+                    <span className="absolute -inset-1.5 cursor-pointer" />
                     <span className="sr-only">View notifications</span>
                     <BellIcon aria-hidden="true" className="size-6" />
                   </button>
@@ -72,7 +72,7 @@ export default function ComponentNavbar() {
                   <Menu as="div" className="relative ml-3">
                     <div>
                       <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
-                        <span className="absolute -inset-1.5" />
+                        <span className="absolute -inset-1.5 cursor-pointer" />
                         <span className="sr-only">Open user menu</span>
                         <img alt="" src={user.imageUrl} className="size-8 rounded-full" />
                       </MenuButton>

@@ -14,13 +14,25 @@ const PageProjectsA = () => {
     start_date: "",
     end_date: "",
     status: "",
+    salary: 0
   });
 
   // Load data dari localStorage saat pertama kali
   React.useEffect(() => {
     const saved = localStorage.getItem("projects");
     if (saved) setData(JSON.parse(saved));
-  }, []);
+    
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    // Cleanup saat komponen unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showModal]);
 
   const saveJobsToStorage = (data) => {
     localStorage.setItem("projects", JSON.stringify(data));
@@ -37,6 +49,7 @@ const PageProjectsA = () => {
       start_date: row.start_date,
       end_date: row.end_date,
       status: row.status,
+      salary: row.salary
     });
   };
 
@@ -74,6 +87,7 @@ const PageProjectsA = () => {
     { label: "Task", key: "task", type: "textarea" },
     { label: "Start Date", key: "start_date" },
     { label: "End Date", key: "end_date" },
+    { label: "Salary", key: "salary", type: "cash" },
     {
       label: "Status",
       key: "status",
@@ -134,6 +148,7 @@ const PageProjectsA = () => {
       defaultValue: new Date().toISOString().split("T")[0],
       disabled: false,
     },
+    { label: "Salary", name: "salary", type: "number", required: true },
     {
       label: "Status",
       name: "status",

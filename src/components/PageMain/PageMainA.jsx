@@ -1,59 +1,89 @@
 import React from "react";
-import ComponentTable from "../ComponentTable";
+import { formatShortNumber, filterThisMonth, filterThisYear, filterLastYear } from "../../utils/utility";
 import ComponentHeaderTitle from "../ComponentHeaderTitle";
+import ComponentButton from "../ComponentButton";
+import ComponentStatsData from "../ComponentStatsData";
 
 const PageMainA = () => {
-  const [data, setData] = React.useState([]);
+  const [statsData, setStatsData] = React.useState([]);
+  const [jobs, setJobs] = React.useState([]);
+  const [projects, setProjects] = React.useState([]);
+  const [filterByMonth, setFilterByMonth] = React.useState("");
 
   React.useEffect(() => {
-    const saved = localStorage.getItem("jobs");
-    if (saved) setData(JSON.parse(saved));
-  }, []);
+    const storedJobs = JSON.parse(localStorage.getItem("jobs") || "[]");
+    const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
 
-  const statusClassMap = {
-    Approved: "dark:bg-green-700",
-    Pending: "dark:bg-orange-600",
-    Expired: "dark:bg-gray-600",
-    Denied: "dark:bg-red-700",
-  };
-
-  const columns = [
-    { label: "Company", key: "name" },
-    { label: "Job Title", key: "jobTitle" },
-    { label: "Description", key: "description", type: "textarea" },
-    { label: "Email", key: "email" },
-    { label: "From", key: "from" },
-    { label: "Link", key: "link", type: "url" },
-    {
-      label: "Status",
-      key: "status",
-      render: (row) => {
-        const value = row.status;
-        const badgeClass = statusClassMap[value] || "dark:bg-gray-500";
-
-        return (
-          <td className="py-3 px-4 text-xs text-gray-400 font-medium">
-            <span
-              className={`px-2 py-1 font-semibold leading-tight text-white rounded-full ${badgeClass}`}
-            >
-              {value}
-            </span>
-          </td>
-        );
-      },
+    if (filterByMonth === "This-Month") {
+      setJobs(filterThisMonth(storedJobs));
+      setProjects(filterThisMonth(storedProjects));
+    } else if (filterByMonth === "This-Year") {
+      setJobs(filterThisYear(storedJobs));
+      setProjects(filterThisYear(storedProjects));
+    } else if (filterByMonth === "Last-Year") {
+      setJobs(filterLastYear(storedJobs));
+      setProjects(filterLastYear(storedProjects));
+    } else {
+      setJobs(storedJobs);
+      setProjects(storedProjects);
     }
+  }, [filterByMonth]);
+
+  React.useEffect(() => {
+    const totalProfit = projects.reduce((acc, curr) => acc + (parseFloat(curr.salary) || 0), 0);
+
+    const statsData = {
+      project: projects.length,
+      project_panding: projects.filter((project) => project.status === "Pending").length,
+      project_complete: projects.filter((project) => project.status === "Complete").length,
+      project_total_profit: formatShortNumber(totalProfit),
+      job: jobs.length,
+      job_approved: jobs.filter((job) => job.status === "Approved").length,
+      job_panding: jobs.filter((job) => job.status === "Pending").length,
+      job_denied: jobs.filter((job) => job.status === "Denied").length,
+    };
+
+    setStatsData(statsData);
+  }, [jobs, projects]);
+
+  const stats1 = [
+    { title: "Total Projects", data: statsData.project },
+    { title: "Projects Pending", data: statsData.project_panding },
+    { title: "Projects Complete", data: statsData.project_complete },
+    { title: "Total Profit", data: statsData.project_total_profit },
+  ];
+
+  const stats2 = [
+    { title: "Total Job Find", data: statsData.job },
+    { title: "Job Approved", data: statsData.job_approved },
+    { title: "Job Pending", data: statsData.job_panding },
+    { title: "Job Denied", data: statsData.job_denied },
   ];
 
   return (
     <>
-      <ComponentHeaderTitle
-        title="All Job"
-        description="Display a complete list of all job opportunities you are currently
-          tracking in your account, including related companies, job roles,
-          descriptions, contact emails, source information, links, and their
-          current statuses."
-      />
-      <ComponentTable columns={columns} data={data} />
+      <div className="flex flex-col gap-4">
+        <ComponentHeaderTitle title="Show Data" description="" />
+        <div className="flex gap-4 flex-col md:flex-row">
+          <ComponentButton type="button" onClick={() => setFilterByMonth("All-Time")}>
+            Show All Time
+          </ComponentButton>
+
+          <ComponentButton type="button" onClick={() => setFilterByMonth("This-Month")}>
+            Show This Month
+          </ComponentButton>
+
+          <ComponentButton type="button" onClick={() => setFilterByMonth("This-Year")}>
+            Show This Year
+          </ComponentButton>
+
+          <ComponentButton type="button" onClick={() => setFilterByMonth("Last-Year")}>
+            Show Last Year
+          </ComponentButton>
+        </div>
+        <ComponentStatsData stats={stats1} />
+        <ComponentStatsData stats={stats2} />
+      </div>
     </>
   );
 };

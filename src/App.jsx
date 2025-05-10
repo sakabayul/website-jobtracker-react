@@ -6,6 +6,7 @@ import PageFindJobs from './pages/PageFindJobs';
 import PageProjects from './pages/PageProjects';
 import PageCalendar from './pages/PageCalendar';
 import PageReports from './pages/PageReports';
+import PageSetting from './pages/PageSetting';
 import Page404 from './pages/Page404';
 import './app.css'
 
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/projects" element={<PageProjects />} />
             <Route path="/calendar" element={<PageCalendar />} />
             <Route path="/reports" element={<PageReports />} />
+            <Route path="/setting" element={<PageSetting />} />
             <Route path="*" element={<Page404 />} />
           </Routes>
         </div>

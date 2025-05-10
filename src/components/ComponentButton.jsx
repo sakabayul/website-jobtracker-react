@@ -1,5 +1,5 @@
-const ComponentButton = ({ type = "button", onClick, children, variant = "default" }) => {
-  const baseClass = "px-4 py-2 rounded cursor-pointer";
+const ComponentButton = ({ type = "button", onClick, children, variant }) => {
+  const baseClass = "px-4 py-2 rounded cursor-pointer transition duration-300 ease-in-out";
   const variants = {
     delete: "bg-red-500 text-white hover:bg-red-600",
     cancel: "bg-gray-300 hover:bg-gray-400",

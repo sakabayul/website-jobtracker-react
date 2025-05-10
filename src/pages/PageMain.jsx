@@ -1,6 +1,7 @@
 import React from 'react';
 import PageMainA from '../components/PageMain/PageMainA';
 import PageMainB from '../components/PageMain/PageMainB';
+import PageMainC from '../components/PageMain/PageMainC';
 
 const PageMain = () => {
   return (
@@ -10,6 +11,9 @@ const PageMain = () => {
       </div>
       <div>
         <PageMainB />
+      </div>
+      <div>
+        <PageMainC />
       </div>
     </div>
   );

@@ -22,7 +22,18 @@ const PageFindJobsA = () => {
   React.useEffect(() => {
     const saved = localStorage.getItem("jobs");
     if (saved) setData(JSON.parse(saved));
-  }, []);
+
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    // Cleanup saat komponen unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showModal]);
 
   const saveJobsToStorage = (data) => {
     localStorage.setItem("jobs", JSON.stringify(data));
@@ -152,8 +163,10 @@ const PageFindJobsA = () => {
       type: "date",
       defaultValue: new Date().toISOString().split("T")[0],
       disabled: true,
+      hidden: true
     },
   ];
+  
   return (
     <>
       <ComponentHeaderTitle

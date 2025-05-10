@@ -12,7 +12,7 @@ const PageCalender = () => {
   const [data, setData] = React.useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [clickedDate, setClickedDate] = useState("");
+  const [clickedDate, setClickedDate] = useState({});
   const [currentView, setCurrentView] = useState('dayGridMonth');
   const [isMobile, setIsMobile] = useState(false);
   const calendarRef = useRef();
@@ -39,8 +39,15 @@ const PageCalender = () => {
   };
 
   const handleDateClick = (arg) => {
-    const fullDate = formatToDatetimeLocal(arg.dateStr);
-    setClickedDate(fullDate);
+    const baseDate = new Date(arg.dateStr.includes("T") ? arg.dateStr : `${arg.dateStr}T08:00`);
+    const endDateObj = new Date(baseDate);
+
+    endDateObj.setHours(endDateObj.getHours() + 1);
+    
+    setClickedDate({
+      start_date: formatToDatetimeLocal(baseDate),
+      end_date: formatToDatetimeLocal(endDateObj)
+    });
     setSelectedEvent(null);
     setShowModal(true);
   };
@@ -65,43 +72,20 @@ const PageCalender = () => {
     saveJobsToStorage(updated);
   };
 
-  useEffect(() => {
-    const saved = localStorage.getItem('calendarEvents');
-    if (saved) setData(JSON.parse(saved));
-
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const handleSave = (row) => {
-    let updatedJobs;
-
-    if (data.find((j) => j.id === row.id)) {
-      // Update
-      updatedJobs = data.map((j) => (j.id === row.id ? row : j));
-    } else {
-      // Tambah
-      row.id = uuidv4();
-      row.backgroundColor = getColor(); // Tambahkan warna
-      updatedJobs = [...data, row];
-    }
-    setData(updatedJobs);
-    saveJobsToStorage(updatedJobs);
-    setShowModal(false);
+  const handleResize = (resize) => {
+    const updated = data.map(ev =>
+      ev.id === resize.event.id
+        ? {
+            ...ev,
+            start: formatToDatetimeLocal(resize.event.start),
+            end: formatToDatetimeLocal(resize.event.end),
+          }
+        : ev
+    );
+    setData(updated);
+    saveJobsToStorage(updated);
   };
 
-  const handleDelete = (row) => {
-    console.log("row:", row);
-    if (confirm(`Yakin hapus data: ${row.title}?`)) {
-      const updatedJobs = data.filter((j) => j.id !== row.id);
-      setData(updatedJobs);
-      saveJobsToStorage(updatedJobs);
-      setShowModal(false);
-    }
-  };
-  
   const getColor = () => {
     const darkColors = [
       '#1E1E2F', '#2C3E50', '#34495E', '#4B0082', '#2F4F4F',
@@ -124,12 +108,48 @@ const PageCalender = () => {
     return chosenColor;
   };
 
+  const handleSave = (row) => {
+    let updatedJobs;
+
+    if (data.find((j) => j.id === row.id)) {
+      // Update
+      updatedJobs = data.map((j) => (j.id === row.id ? row : j));
+    } else {
+      // Tambah
+      row.id = uuidv4();
+      row.backgroundColor = getColor(); // Tambahkan warna
+      updatedJobs = [...data, row];
+    }
+    setData(updatedJobs);
+    saveJobsToStorage(updatedJobs);
+    setShowModal(false);
+  };
+
+  const handleDelete = (row) => {
+    if (confirm(`Yakin hapus data: ${row.title}?`)) {
+      const updatedJobs = data.filter((j) => j.id !== row.id);
+      setData(updatedJobs);
+      saveJobsToStorage(updatedJobs);
+      setShowModal(false);
+    }
+  };
+
   const fields = [
     { label: "Title", name: "title", required: true },
     { label: "Description", name: "description", type: "text", required: true },
-    { label: "Start", name: "start", type: "datetime-local", defaultValue: clickedDate, required: true, disabled: selectedEvent? false : true },
-    { label: "End", name: "end", type: "datetime-local", defaultValue: clickedDate, required: false, disabled: false }
+    { label: "Start", name: "start", type: "datetime-local", defaultValue: clickedDate.start_date, required: true, disabled: selectedEvent? false : true },
+    { label: "End", name: "end", type: "datetime-local", defaultValue: clickedDate.end_date, required: false, disabled: false }
   ];
+
+  useEffect(() => {
+    const saved = localStorage.getItem('calendarEvents');
+    if (saved) setData(JSON.parse(saved));
+
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   return (
     <div className="p-4">
       {isMobile && (
@@ -144,7 +164,9 @@ const PageCalender = () => {
               className="col-start-1 row-start-1 w-full appearance-none rounded bg-white px-3 py-2 text-base outline-1 -outline-offset-1 outline-black focus:outline-2"
             >
               <option value="dayGridMonth">📅 Bulan</option>
-              <option value="listMonth">📋 List Bulan Ini</option>
+              <option value="listDay">📋 List Day</option>
+              <option value="listWeek">📋 List Week</option>
+              <option value="listMonth">📋 List Month</option>
             </select>
             <ChevronDownIcon
               aria-hidden="true"
@@ -164,11 +186,13 @@ const PageCalender = () => {
         dateClick={handleDateClick}
         eventClick={handleEventClick}
         eventDrop={handleEventDrop}
+        eventResize={handleResize}
         headerToolbar={{
-          left: 'prev,next today',
+          left: 'prev,today,next',
           center: 'title',
           right: isMobile ? false : 'timeGridDay,timeGridWeek,dayGridMonth,listMonth',
         }}
+        titleFormat={currentView !== "listWeek"? { day: 'numeric', month: 'short' } : { day: '2-digit' } }
         buttonText={{
           today: 'Today',
           timeGridDay: 'Day',
@@ -177,12 +201,19 @@ const PageCalender = () => {
           listMonth: 'List'
         }}
         eventTimeFormat={{
+          // day: '2-digit',
+          // month: 'short',
           hour: '2-digit',
           minute: '2-digit',
-          meridiem: 'short', // Untuk AM/PM
-          hour12: true       // Format 12 jam
+          hour12: false
         }}
         height="auto"
+        eventContent={isMobile? (arg) => (
+          <div className="text-gray-700 truncate max-w-[130px]" style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
+            <b>{arg.timeText}</b>
+            <i className="ml-2">{arg.event.title}</i>
+          </div>
+        ) : true}
       />
 
       {showModal && (
