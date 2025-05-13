@@ -3,19 +3,20 @@ import ComponentTable from "../ComponentTable";
 import ComponentModal from "../ComponentModal";
 import ComponentHeaderTitle from "../ComponentHeaderTitle";
 
-const PageFindJobsA = () => {
+const PageAppliedJobsA = () => {
   const [data, setData] = React.useState([]);
   const [showModal, setShowModal] = React.useState(false);
   const [fromData, setfromData] = React.useState({
     id: null,
-    name: "",
+    date_applied: "",
+    name_company: "",
     jobTitle: "",
-    email: "",
-    from: "",
-    status: "",
-    link: "",
+    info_source: "",
+    application_status: "",
+    link_job: "",
+    contact_person: "",
     description: "",
-    created: "",
+    created: ""
   });
 
   // Load data dari localStorage saat pertama kali
@@ -39,24 +40,18 @@ const PageFindJobsA = () => {
     localStorage.setItem("jobs", JSON.stringify(data));
   };
 
-  const statusClassMap = {
-    Approved: "dark:bg-green-700",
-    Pending: "dark:bg-orange-600",
-    Expired: "dark:bg-gray-600",
-    Denied: "dark:bg-red-700",
-  };
-
   const handleShowModal = (row) => {
     setShowModal(true);
     if (!row.id) return setfromData(null);
     setfromData({
       id: row.id,
-      name: row.name,
+      date_applied: row.date_applied,
+      name_company: row.name_company,
       jobTitle: row.jobTitle,
-      email: row.email,
-      from: row.from,
-      status: row.status,
-      link: row.link,
+      info_source: row.info_source,
+      application_status: row.application_status,
+      link_job: row.link_job,
+      contact_person: row.contact_person,
       description: row.description,
       created: row.created,
     });
@@ -85,17 +80,27 @@ const PageFindJobsA = () => {
   };
 
   const columns = [
-    { label: "Company", key: "name" },
-    { label: "Job Title", key: "jobTitle" },
-    { label: "Description", key: "description", type: "textarea" },
-    { label: "Email", key: "email" },
-    { label: "From", key: "from" },
-    { label: "Link", key: "link", type: "url" },
+    { label: "Date Applied", key: "date_applied" },
+    { label: "Company Name", key: "name_company" },
+    { label: "Applied Positions", key: "jobTitle" },
     {
-      label: "Status",
-      key: "status",
+      label: "Information Source",
+      key: "info_source",
       render: (row) => {
-        const value = row.status;
+        const value = row.info_source;
+
+        return (
+          <td className="py-3 px-4 text-base font-semibold text-gray-200 max-w-45 overflow-hidden text-ellipsis">
+              {value.replace(/_/g, ' ')}
+          </td>
+        );
+      }
+    },
+    {
+      label: "Application Status",
+      key: "application_status",
+      render: (row) => {
+        const value = row.application_status;
         const badgeClass = statusClassMap[value] || "dark:bg-gray-500";
 
         return (
@@ -103,17 +108,20 @@ const PageFindJobsA = () => {
             <span
               className={`px-2 py-1 font-semibold leading-tight text-white rounded-full ${badgeClass}`}
             >
-              {value}
+              {value.replace(/_/g, ' ')}
             </span>
           </td>
         );
-      },
+      }
     },
+    { label: "Link Job", key: "link_job", type: "url" },
+    { label: "Contact Person", key: "contact_person" },
+    { label: "Description", key: "description", type: "textarea" },
     {
       label: "Actions",
       key: "actions",
       render: (row) => (
-        <td className="py-3 px-4 space-x-6 text-base text-gray-700 font-medium">
+        <td className="space-x-8 text-base text-gray-700 font-medium min-w-50 text-center">
           <button
             onClick={() => handleShowModal(row)}
             type="button"
@@ -130,33 +138,49 @@ const PageFindJobsA = () => {
           </button>
         </td>
       ),
-    },
+    }
   ];
 
   const fields = [
-    { label: "Company", name: "name", required: true },
-    { label: "Job Title", name: "jobTitle", required: true },
     {
-      label: "Description",
-      name: "description",
-      type: "textarea",
-      required: true,
+      label: "Date Applied",
+      name: "date_applied",
+      type: "date",
+      defaultValue: new Date().toISOString().split("T")[0]
     },
-    { label: "Email", name: "email", type: "email", required: true },
-    { label: "From", name: "from", required: true },
+    { label: "Company Name", name: "name_company", required: true },
+    { label: "Applied Positions", name: "jobTitle", required: true },
     {
-      label: "Status",
-      name: "status",
+      label: "Information Source",
+      name: "info_source",
       type: "select",
-      defaultValue: "Approved",
+      defaultValue: "Official Website",
       options: [
-        { label: "Approved", value: "Approved" },
-        { label: "Pending", value: "Pending" },
-        { label: "Denied", value: "Denied" },
-        { label: "Expired", value: "Expired" },
-      ],
+        { label: "Official Website", value: "Official Website" },
+        { label: "LinkedIn", value: "LinkedIn" },
+        { label: "Social Media", value: "Social Media" },
+        { label: "Jobstreet", value: "Jobstreet" },
+        { label: "Glints", value: "Glints" },
+        { label: "Indeed", value: "Indeed" },
+        { label: "Karir", value: "Karir" }
+      ]
     },
-    { label: "Link", name: "link", type: "url", required: true },
+    {
+      label: "Application Status",
+      name: "application_status",
+      type: "select",
+      defaultValue: "Sending",
+      options: [
+        { label: "Sending", value: "Sending" },
+        { label: "In Process", value: "In_Process" },
+        { label: "Interview", value: "Interview" },
+        { label: "Approved", value: "Approved" },
+        { label: "Denied", value: "Denied" }
+      ]
+    },
+    { label: "Link Job", name: "link_job", type: "url", required: true },
+    { label: "Contact Person", name: "contact_person", required: true },
+    { label: "Description", name: "description", type: "textarea", required: true },
     {
       label: "Created",
       name: "created",
@@ -166,11 +190,19 @@ const PageFindJobsA = () => {
       hidden: true
     },
   ];
+
+  const statusClassMap = {
+    Sending: "dark:bg-cyan-700",
+    In_Process: "dark:bg-orange-600",
+    Interview: "dark:bg-yellow-600",
+    Approved: "dark:bg-green-700",
+    Denied: "dark:bg-red-700"
+  };
   
   return (
     <>
       <ComponentHeaderTitle
-        title="All Job"
+        title="All Applied Jobs"
         description="Display a complete list of all job opportunities you are currently
           tracking in your account, including related companies, job roles,
           descriptions, contact emails, source information, links, and their
@@ -194,4 +226,4 @@ const PageFindJobsA = () => {
   );
 };
 
-export default PageFindJobsA;
+export default PageAppliedJobsA;

@@ -2,10 +2,10 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import ComponentHeaderTitle from '../ComponentHeaderTitle';
 
-const PageMainC = ({ data }) => {
+const PageMainD = ({ data }) => {
   const chartSeries1 = () => {
     const summary = {};
-    const fetchData = data.jobs;
+    const fetchData = data.projects;
     
     // Hitung jumlah per status
     fetchData.forEach(({ jobTitle }) => {
@@ -27,7 +27,7 @@ const PageMainC = ({ data }) => {
         backgroundColor: '#1E2A39'
       },
       title: {
-        text: 'Most Applied Positions',
+        text: 'Most Position Projects',
         style: { color: '#fff' }
       },
       series: [
@@ -58,19 +58,19 @@ const PageMainC = ({ data }) => {
   };
   const chartSeries2 = () => {
     const summary = {};
-    const fetchData = data.jobs;
+    const fetchData = data.projects;
     
     // Hitung jumlah per status
-    fetchData.forEach(({ info_source }) => {
-      if (!summary[info_source]) {
-        summary[info_source] = 0;
+    fetchData.forEach(({ output }) => {
+      if (!summary[output]) {
+        summary[output] = 0;
       }
-      summary[info_source] += 1;
+      summary[output] += 1;
     });
 
     // Ubah hasil summary menjadi array untuk chart
-    const statusChartData = Object.entries(summary).map(([info_source, count]) => ({
-      name: info_source.replace(/_/g, ' '), //Ubah Underscore menjadi Space
+    const statusChartData = Object.entries(summary).map(([output, count]) => ({
+      name: output.replace(/_/g, ' '), //Ubah Underscore menjadi Space
       y: count,
     }));
 
@@ -80,7 +80,7 @@ const PageMainC = ({ data }) => {
         backgroundColor: '#1E2A39'
       },
       title: {
-        text: 'Information Source',
+        text: 'Output/Deliverables',
         style: { color: '#fff' }
       },
       series: [
@@ -111,19 +111,19 @@ const PageMainC = ({ data }) => {
   }
   const chartSeries3 = () => {
     const summary = {};
-    const fetchData = data.jobs;
+    const fetchData = data.projects;
     
     // Hitung jumlah per status
-    fetchData.forEach(({ application_status }) => {
-      if (!summary[application_status]) {
-        summary[application_status] = 0;
+    fetchData.forEach(({ status }) => {
+      if (!summary[status]) {
+        summary[status] = 0;
       }
-      summary[application_status] += 1;
+      summary[status] += 1;
     });
 
     // Ubah hasil summary menjadi array untuk chart
-    const statusChartData = Object.entries(summary).map(([application_status, count]) => ({
-      name: application_status.replace(/_/g, ' '), //Ubah Underscore menjadi Space
+    const statusChartData = Object.entries(summary).map(([status, count]) => ({
+      name: status.replace(/_/g, ' '), //Ubah Underscore menjadi Space
       y: count,
     }));
 
@@ -133,7 +133,7 @@ const PageMainC = ({ data }) => {
         backgroundColor: '#1E2A39'
       },
       title: {
-        text: 'Application Status',
+        text: 'Project Status',
         style: { color: '#fff' }
       },
       series: [
@@ -165,7 +165,7 @@ const PageMainC = ({ data }) => {
 
   return (
     <>
-      <ComponentHeaderTitle title="Monitoring Applied Jobs" description="" />
+      <ComponentHeaderTitle title="Monitoring Projects" description="" />
       <div className="flex flex-wrap gap-2">
         <div className="bg-gray-800 p-4 rounded-lg w-[calc(100%-0.25rem)] sm:w-[calc(50%-0.25rem)] lg:w-[calc(33%-0.375rem)]">
           <HighchartsReact highcharts={Highcharts} options={chartSeries1()} />
@@ -181,4 +181,4 @@ const PageMainC = ({ data }) => {
   );
 };
 
-export default PageMainC;
+export default PageMainD;

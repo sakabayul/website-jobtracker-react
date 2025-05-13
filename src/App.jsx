@@ -2,7 +2,7 @@ import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import ComponentNavbar from './components/ComponentNavbar';
 import PageMain from './pages/PageMain';
-import PageFindJobs from './pages/PageFindJobs';
+import PageAppliedJobs from './pages/AppliedJobs';
 import PageProjects from './pages/PageProjects';
 import PageCalendar from './pages/PageCalendar';
 import PageReports from './pages/PageReports';
@@ -27,8 +27,8 @@ const App = () => {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <Routes>
             <Route path="/" element={<PageMain />} />
-            <Route path="/find-jobs" element={<PageFindJobs />} />
-            <Route path="/projects" element={<PageProjects />} />
+            <Route path="/applied-jobs" element={<PageAppliedJobs />} />
+            <Route path="/project-history" element={<PageProjects />} />
             <Route path="/calendar" element={<PageCalendar />} />
             <Route path="/reports" element={<PageReports />} />
             <Route path="/setting" element={<PageSetting />} />

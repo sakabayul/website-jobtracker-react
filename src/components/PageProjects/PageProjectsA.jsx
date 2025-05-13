@@ -9,12 +9,16 @@ const PageProjectsA = () => {
   const [fromData, setfromData] = React.useState({
     id: null,
     name: "",
+    project_name: "",
     jobTitle: "",
     task: "",
     start_date: "",
     end_date: "",
+    tech_stack: "",
+    output: "",
+    salary: 0,
     status: "",
-    salary: 0
+    link_project: ""
   });
 
   // Load data dari localStorage saat pertama kali
@@ -44,12 +48,16 @@ const PageProjectsA = () => {
     setfromData({
       id: row.id,
       name: row.name,
+      project_name: row.project_name,
       jobTitle: row.jobTitle,
       task: row.task,
       start_date: row.start_date,
       end_date: row.end_date,
+      tech_stack: row.tech_stack,
+      output: row.output,
+      salary: row.salary,
       status: row.status,
-      salary: row.salary
+      link_project: row.link_project
     });
   };
 
@@ -77,16 +85,19 @@ const PageProjectsA = () => {
 
   const statusClassMap = {
     Complete: "dark:bg-green-700",
-    InProgress: "dark:bg-orange-600",
-    Pending: "dark:bg-red-700",
+    In_Progress: "dark:bg-orange-600",
+    Pending_Payment: "dark:bg-red-700",
   };
 
   const columns = [
-    { label: "Company", key: "name" },
-    { label: "Job Title", key: "jobTitle" },
+    { label: "Company Name", key: "name" },
+    { label: "Project Name", key: "project_name" },
+    { label: "Positions", key: "jobTitle" },
     { label: "Task", key: "task", type: "textarea" },
     { label: "Start Date", key: "start_date" },
     { label: "End Date", key: "end_date" },
+    { label: "Tech Stack/Tools", key: "tech_stack" },
+    { label: "Output/Deliverables", key: "output" },
     { label: "Salary", key: "salary", type: "cash" },
     {
       label: "Status",
@@ -100,17 +111,18 @@ const PageProjectsA = () => {
             <span
               className={`px-2 py-1 font-semibold leading-tight text-white rounded-full ${badgeClass}`}
             >
-              {value === "InProgress" ? "In Progress" : value}
+              {value.replace(/_/g, ' ')}
             </span>
           </td>
         );
       },
     },
+    { label: "Link Project", key: "link_project", type: "url" },
     {
       label: "Actions",
       key: "actions",
       render: (row) => (
-        <td className="py-3 px-4 space-x-6 text-base text-gray-700 font-medium">
+        <td className="space-x-8 text-base text-gray-700 font-medium min-w-50 text-center">
           <button
             onClick={() => handleShowModal(row)}
             type="button"
@@ -127,12 +139,13 @@ const PageProjectsA = () => {
           </button>
         </td>
       ),
-    },
+    }
   ];
 
   const fields = [
-    { label: "Company", name: "name", required: true },
-    { label: "Job Title", name: "jobTitle", required: true },
+    { label: "Company Name", name: "name", required: true },
+    { label: "Project Name", name: "project_name", required: true },
+    { label: "Positions", name: "jobTitle", required: true },
     { label: "Task", name: "task", type: "textarea", required: true },
     {
       label: "Start Date",
@@ -148,18 +161,21 @@ const PageProjectsA = () => {
       defaultValue: new Date().toISOString().split("T")[0],
       disabled: false,
     },
+    { label: "Tech Stack/Tools", name: "tech_stack", required: true },
+    { label: "Output/Deliverables", name: "output", required: true },
     { label: "Salary", name: "salary", type: "number", required: true },
     {
       label: "Status",
       name: "status",
       type: "select",
-      defaultValue: "Complete",
+      defaultValue: "In Progress",
       options: [
+        { label: "In Progress", value: "In_Progress" },
+        { label: "Pending Payment", value: "Pending_Payment" },
         { label: "Complete", value: "Complete" },
-        { label: "In Progress", value: "InProgress" },
-        { label: "Pending", value: "Pending" },
       ],
     },
+    { label: "Link Project", name: "link_project", type: "url", required: true }
   ];
   return (
     <>

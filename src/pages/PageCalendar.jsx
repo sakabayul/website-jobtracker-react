@@ -192,7 +192,26 @@ const PageCalender = () => {
           center: 'title',
           right: isMobile ? false : 'timeGridDay,timeGridWeek,dayGridMonth,listMonth',
         }}
-        titleFormat={currentView !== "listWeek"? { day: 'numeric', month: 'short' } : { day: '2-digit' } }
+        views={{
+          timeGridDay: {
+            titleFormat: { day: 'numeric', month: 'short' }
+          },
+          listMonth: {
+            titleFormat: { day: 'numeric', month: 'short' }
+          },
+          timeGridWeek: {
+            titleFormat: { month: 'short' }
+          },
+          dayGridMonth: {
+            titleFormat: { month: 'short' }
+          },
+          listDay: {
+            titleFormat: { day: 'numeric', month: 'short' }
+          },
+          listWeek: {
+            titleFormat: { month: 'short' }
+          }
+        }}
         buttonText={{
           today: 'Today',
           timeGridDay: 'Day',
