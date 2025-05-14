@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from "react-router-dom";
 
 const ComponentTable = ({ columns, data }) => {
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -8,6 +9,7 @@ const ComponentTable = ({ columns, data }) => {
   const startIdx = (currentPage - 1) * rowsPerPage;
   const endIdx = Math.min(startIdx + rowsPerPage, totalData);
   const currentData = data.slice(startIdx, endIdx);
+  const [isVisible, setIsVisible] = React.useState(false);
 
   const handlePrev = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -21,8 +23,20 @@ const ComponentTable = ({ columns, data }) => {
       setCurrentPage(currentPage - 1);
     }
   }, [currentData, currentPage]);
+
+  const location = useLocation();
+  React.useEffect(() => {
+    setIsVisible(false); // Reset dulu
+    const timeout = setTimeout(() => {
+      setIsVisible(true); // Aktifkan lagi untuk trigger animasi
+    }, 10);
+
+    return () => clearTimeout(timeout);
+  }, [location.pathname]); // Trigger ulang saat path berubah
   return (
-    <div className="mx-auto pb-8 w-full max-w-7xl">
+    <div className={`mx-auto pb-8 w-full max-w-7xl transition-all duration-800 ease-in-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+      }`}>
       <div className='overflow-x-auto'>
         <table className="px-4 min-w-full rounded-md border border-gray-200 overflow-hidden">
           {/* :TABLE HEAD */}

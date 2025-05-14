@@ -1,6 +1,16 @@
+import React from "react";
 import ComponentButton from "./ComponentButton";
+import { PlusIcon } from '@heroicons/react/24/solid';
 
 const ComponentHeaderTitle = ({ title, description, handleShowModal, button = false }) => {
+  const [isMobile, setIsMobile] = React.useState(false);
+  
+  React.useEffect(() => {
+      const handleResize = () => setIsMobile(window.innerWidth < 768);
+      handleResize();
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
   return (
     <>
       <div className="mb-5 flex justify-between items-center gap-10">
@@ -16,7 +26,7 @@ const ComponentHeaderTitle = ({ title, description, handleShowModal, button = fa
                 type="button"
                 onClick={handleShowModal}
             >
-              Add
+              {isMobile? <PlusIcon className="h-5 w-5" /> : "Add Data"}  
             </ComponentButton>
           )}
         </div>

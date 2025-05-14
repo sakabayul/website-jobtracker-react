@@ -2,7 +2,7 @@ import React from "react";
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import ComponentButton from "./ComponentButton";
 
-const ComponentModalJob = ({ onClose, onSave, onDelete, fromData, fields }) => {
+const ComponentModalJob = ({ onClose, onSave, onDelete, fromData, fields, showModal }) => {
   const [data, setData] = React.useState({});
 
   React.useEffect(() => {
@@ -33,8 +33,9 @@ const ComponentModalJob = ({ onClose, onSave, onDelete, fromData, fields }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/70">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-150 overflow-auto">
+    <div className={`px-3 fixed inset-0 flex items-center justify-center z-50 bg-black/70 transition-opacity duration-300 ease-in-out
+      ${showModal ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
+      <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[600px] overflow-auto">
         <h2 className="text-xl font-semibold mb-4">
           {fromData ? "Edit Job" : "Add Job"}
         </h2>

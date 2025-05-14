@@ -235,15 +235,14 @@ const PageCalender = () => {
         ) : true}
       />
 
-      {showModal && (
-        <ComponentModal
-          onClose={() => setShowModal(false)}
-          fields={fields}
-          onSave={handleSave}
-          onDelete={handleDelete}
-          fromData={selectedEvent}
-        />
-      )}
+      <ComponentModal
+        onClose={() => setShowModal(false)}
+        fields={fields}
+        onSave={handleSave}
+        onDelete={handleDelete}
+        fromData={selectedEvent}
+        showModal={showModal}
+      />
     </div>
   );
 };

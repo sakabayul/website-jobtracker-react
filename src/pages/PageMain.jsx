@@ -67,12 +67,10 @@ const PageMain = () => {
       
       <div className="flex flex-col gap-10">
         {/* Komponen yang menerima data hasil filter */}
-        {(filteredData.jobs.length > 0 || filteredData.projects.length > 0) && (
-          <div>
-            <PageMainA data={filteredData} />
-          </div>
-        )}
-        {(filteredData.jobs.length > 0 || filteredData.projects.length > 0) && (
+        <div>
+          <PageMainA data={filteredData} />
+        </div>
+        {(filteredData.jobs.length > 0 && filteredData.projects.length > 0) && (
           <div>
             <PageMainB data={filteredData} />
           </div>

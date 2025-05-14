@@ -186,18 +186,19 @@ const PageProjectsA = () => {
         handleShowModal={handleShowModal}
         button={true}
       />
-
-      <ComponentTable columns={columns} data={data} />
-
-      {showModal && (
-        <ComponentModal
-          onClose={() => setShowModal(false)}
-          fields={fields}
-          onSave={handleSave}
-          onDelete={handleDelete}
-          fromData={fromData}
-        />
+      
+      {data.length > 0 && (
+        <ComponentTable columns={columns} data={data} />
       )}
+
+      <ComponentModal
+        onClose={() => setShowModal(false)}
+        fields={fields}
+        onSave={handleSave}
+        onDelete={handleDelete}
+        fromData={fromData}
+        showModal={showModal}
+      />
     </>
   );
 };
