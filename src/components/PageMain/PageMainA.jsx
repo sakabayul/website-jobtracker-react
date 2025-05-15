@@ -22,9 +22,9 @@ const PageMainA = ({ data }) => {
 
   const stats = [
     { title: "Total Applied Jobs", data: statsData.job },
-    { title: "Total Projects", data: statsData.project },
+    { title: "Total Applied Projects", data: statsData.project },
     { title: "Projects Complete", data: statsData.project_complete },
-    { title: "Total Profit", data: statsData.project_total_profit },
+    { title: "Total Profit Projects", data: statsData.project_total_profit },
   ];
   
   const location = useLocation();

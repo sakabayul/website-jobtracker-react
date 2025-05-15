@@ -79,6 +79,14 @@ const PageAppliedJobsA = () => {
     }
   };
 
+  const uniqueJobTitles = Array.from(new Set(data.map(d => d.jobTitle)))
+  .filter(Boolean) // Menghapus null/undefined
+  .map(title => ({
+    label: title,
+    value: title
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label)); // Urutkan sesuai huruf (abjad)
+
   const columns = [
     { label: "Date Applied", key: "date_applied" },
     { label: "Company Name", key: "name_company" },
@@ -140,7 +148,7 @@ const PageAppliedJobsA = () => {
       ),
     }
   ];
-
+  
   const fields = [
     {
       label: "Date Applied",
@@ -149,7 +157,13 @@ const PageAppliedJobsA = () => {
       defaultValue: new Date().toISOString().split("T")[0]
     },
     { label: "Company Name", name: "name_company", required: true },
-    { label: "Applied Positions", name: "jobTitle", required: true },
+    {
+      label: "Applied Positions",
+      name: "jobTitle",
+      type: "creatable-select",
+      defaultValue: uniqueJobTitles[0]?.label,
+      options: uniqueJobTitles
+    },
     {
       label: "Information Source",
       name: "info_source",

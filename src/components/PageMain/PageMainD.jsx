@@ -7,7 +7,7 @@ const PageMainD = ({ data }) => {
     const summary = {};
     const fetchData = data.projects;
     
-    // Hitung jumlah per status
+    // Hitung jumlah setiap jobTitle
     fetchData.forEach(({ jobTitle }) => {
       if (!summary[jobTitle]) {
         summary[jobTitle] = 0;
@@ -15,11 +15,14 @@ const PageMainD = ({ data }) => {
       summary[jobTitle] += 1;
     });
 
-    // Ubah hasil summary menjadi array untuk chart
-    const statusChartData = Object.entries(summary).map(([jobTitle, count]) => ({
-      name: jobTitle,
-      y: count,
-    }));
+    // Ubah menjadi array dan urutkan dari yang paling banyak
+    const statusChartData = Object.entries(summary)
+      .map(([jobTitle, count]) => ({
+        name: jobTitle,
+        y: count,
+      }))
+      .sort((a, b) => b.y - a.y) // Urutkan descending
+      .slice(0, 6); // Ambil 4 teratas
 
     return {
       chart: {
@@ -49,7 +52,8 @@ const PageMainD = ({ data }) => {
           }
       },
       legend: {
-        itemStyle: { color: '#fff' }
+        itemStyle: { color: '#fff', fontWeight: 'normal' },
+        itemHoverStyle: { color: '#f39c12', fontWeight: 'bold' }
       },
       credits: {
         enabled: false // Menghilangkan credit Highcharts
@@ -60,19 +64,22 @@ const PageMainD = ({ data }) => {
     const summary = {};
     const fetchData = data.projects;
     
-    // Hitung jumlah per status
-    fetchData.forEach(({ output }) => {
-      if (!summary[output]) {
-        summary[output] = 0;
+    // Hitung jumlah setiap tech_stack
+    fetchData.forEach(({ tech_stack }) => {
+      if (!summary[tech_stack]) {
+        summary[tech_stack] = 0;
       }
-      summary[output] += 1;
+      summary[tech_stack] += 1;
     });
 
-    // Ubah hasil summary menjadi array untuk chart
-    const statusChartData = Object.entries(summary).map(([output, count]) => ({
-      name: output.replace(/_/g, ' '), //Ubah Underscore menjadi Space
-      y: count,
-    }));
+    // Ubah menjadi array dan urutkan dari yang paling banyak
+    const statusChartData = Object.entries(summary)
+      .map(([tech_stack, count]) => ({
+        name: tech_stack,
+        y: count,
+      }))
+      .sort((a, b) => b.y - a.y) // Urutkan descending
+      .slice(0, 6); // Ambil 4 teratas
 
     return {
       chart: {
@@ -80,7 +87,7 @@ const PageMainD = ({ data }) => {
         backgroundColor: '#1E2A39'
       },
       title: {
-        text: 'Output/Deliverables',
+        text: 'Tech Stack/Tools',
         style: { color: '#fff' }
       },
       series: [
@@ -102,7 +109,8 @@ const PageMainD = ({ data }) => {
           }
       },
       legend: {
-        itemStyle: { color: '#fff' }
+        itemStyle: { color: '#fff', fontWeight: 'normal' },
+        itemHoverStyle: { color: '#f39c12', fontWeight: 'bold' }
       },
       credits: {
         enabled: false // Menghilangkan credit Highcharts
@@ -155,7 +163,8 @@ const PageMainD = ({ data }) => {
           }
       },
       legend: {
-        itemStyle: { color: '#fff' }
+        itemStyle: { color: '#fff', fontWeight: 'normal' },
+        itemHoverStyle: { color: '#f39c12', fontWeight: 'bold' }
       },
       credits: {
         enabled: false // Menghilangkan credit Highcharts

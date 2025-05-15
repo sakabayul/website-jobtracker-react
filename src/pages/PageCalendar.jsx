@@ -4,11 +4,18 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from '@fullcalendar/list';
-import { ChevronDownIcon } from '@heroicons/react/16/solid'
+import Select from 'react-select';
 import { v4 as uuidv4 } from "uuid";
 import ComponentModal from "../components/ComponentModal";
 
 const PageCalender = () => {
+  const options = [
+    { value: 'dayGridMonth', label: '📅 Bulan' },
+    { value: 'listDay', label: '📋 List Day' },
+    { value: 'listWeek', label: '📋 List Week' },
+    { value: 'listMonth', label: '📋 List Month' }
+  ];
+
   const [data, setData] = React.useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -32,8 +39,8 @@ const PageCalender = () => {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
-  const handleChangeView = (e) => {
-    const selectedView = e.target.value;
+  const handleChangeView = (selectedOption) => {
+    const selectedView = selectedOption?.value || "";
     setCurrentView(selectedView);
     calendarRef.current.getApi().changeView(selectedView);
   };
@@ -151,28 +158,15 @@ const PageCalender = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   return (
-    <div className="p-4">
+    <div>
       {isMobile && (
-        <div className="sm:col-span-3 mb-4">
-          <label htmlFor="country" className="block text-sm/6 font-medium text-gray-900">
-            
-          </label>
-          <div className="mt-2 grid grid-cols-1">
-            <select
-              value={currentView}
-              onChange={handleChangeView}
-              className="col-start-1 row-start-1 w-full appearance-none rounded bg-white px-3 py-2 text-base outline-1 -outline-offset-1 outline-black focus:outline-2"
-            >
-              <option value="dayGridMonth">📅 Bulan</option>
-              <option value="listDay">📋 List Day</option>
-              <option value="listWeek">📋 List Week</option>
-              <option value="listMonth">📋 List Month</option>
-            </select>
-            <ChevronDownIcon
-              aria-hidden="true"
-              className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
-            />
-          </div>
+        <div className="mb-4 relative z-50">
+          <Select
+            value={options.find(opt => opt.value === currentView)}
+            onChange={handleChangeView}
+            options={options}
+            placeholder="Pilih posisi"
+          />
         </div>
       )}
 

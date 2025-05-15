@@ -6,8 +6,8 @@ const PageMainC = ({ data }) => {
   const chartSeries1 = () => {
     const summary = {};
     const fetchData = data.jobs;
-    
-    // Hitung jumlah per status
+
+    // Hitung jumlah setiap jobTitle
     fetchData.forEach(({ jobTitle }) => {
       if (!summary[jobTitle]) {
         summary[jobTitle] = 0;
@@ -15,11 +15,14 @@ const PageMainC = ({ data }) => {
       summary[jobTitle] += 1;
     });
 
-    // Ubah hasil summary menjadi array untuk chart
-    const statusChartData = Object.entries(summary).map(([jobTitle, count]) => ({
-      name: jobTitle,
-      y: count,
-    }));
+    // Ubah menjadi array dan urutkan dari yang paling banyak
+    const statusChartData = Object.entries(summary)
+      .map(([jobTitle, count]) => ({
+        name: jobTitle,
+        y: count,
+      }))
+      .sort((a, b) => b.y - a.y) // Urutkan descending
+      .slice(0, 6); // Ambil 4 teratas
 
     return {
       chart: {
@@ -49,7 +52,8 @@ const PageMainC = ({ data }) => {
           }
       },
       legend: {
-        itemStyle: { color: '#fff' }
+        itemStyle: { color: '#fff', fontWeight: 'normal' },
+        itemHoverStyle: { color: '#f39c12', fontWeight: 'bold' }
       },
       credits: {
         enabled: false // Menghilangkan credit Highcharts
@@ -60,7 +64,7 @@ const PageMainC = ({ data }) => {
     const summary = {};
     const fetchData = data.jobs;
     
-    // Hitung jumlah per status
+    // Hitung jumlah setiap info_source
     fetchData.forEach(({ info_source }) => {
       if (!summary[info_source]) {
         summary[info_source] = 0;
@@ -68,11 +72,14 @@ const PageMainC = ({ data }) => {
       summary[info_source] += 1;
     });
 
-    // Ubah hasil summary menjadi array untuk chart
-    const statusChartData = Object.entries(summary).map(([info_source, count]) => ({
-      name: info_source.replace(/_/g, ' '), //Ubah Underscore menjadi Space
-      y: count,
-    }));
+    // Ubah menjadi array dan urutkan dari yang paling banyak
+    const statusChartData = Object.entries(summary)
+      .map(([info_source, count]) => ({
+        name: info_source.replace(/_/g, ' '),
+        y: count,
+      }))
+      .sort((a, b) => b.y - a.y) // Urutkan descending
+      .slice(0, 6); // Ambil 4 teratas
 
     return {
       chart: {
@@ -102,7 +109,8 @@ const PageMainC = ({ data }) => {
           }
       },
       legend: {
-        itemStyle: { color: '#fff' }
+        itemStyle: { color: '#fff', fontWeight: 'normal' },
+        itemHoverStyle: { color: '#f39c12', fontWeight: 'bold' }
       },
       credits: {
         enabled: false // Menghilangkan credit Highcharts
@@ -155,7 +163,8 @@ const PageMainC = ({ data }) => {
           }
       },
       legend: {
-        itemStyle: { color: '#fff' }
+        itemStyle: { color: '#fff', fontWeight: 'normal' },
+        itemHoverStyle: { color: '#f39c12', fontWeight: 'bold' }
       },
       credits: {
         enabled: false // Menghilangkan credit Highcharts

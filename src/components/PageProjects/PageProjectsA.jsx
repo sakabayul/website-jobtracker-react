@@ -83,6 +83,22 @@ const PageProjectsA = () => {
     }
   };
 
+  const uniqueJobTitles = Array.from(new Set(data.map(d => d.jobTitle)))
+    .filter(Boolean) // hapus yang undefined/null
+    .map(title => ({
+      label: title,
+      value: title
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label)); // Urutkan sesuai huruf (abjad)
+
+  const uniqueTechStack = Array.from(new Set(data.map(d => d.tech_stack)))
+    .filter(Boolean) // hapus yang undefined/null
+    .map(title => ({
+      label: title,
+      value: title
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label)); // Urutkan sesuai huruf (abjad)
+
   const statusClassMap = {
     Complete: "dark:bg-green-700",
     In_Progress: "dark:bg-orange-600",
@@ -145,7 +161,13 @@ const PageProjectsA = () => {
   const fields = [
     { label: "Company Name", name: "name", required: true },
     { label: "Project Name", name: "project_name", required: true },
-    { label: "Positions", name: "jobTitle", required: true },
+    {
+      label: "Positions",
+      name: "jobTitle",
+      type: "creatable-select",
+      defaultValue: uniqueJobTitles[0]?.label,
+      options: uniqueJobTitles
+    },
     { label: "Task", name: "task", type: "textarea", required: true },
     {
       label: "Start Date",
@@ -161,18 +183,24 @@ const PageProjectsA = () => {
       defaultValue: new Date().toISOString().split("T")[0],
       disabled: false,
     },
-    { label: "Tech Stack/Tools", name: "tech_stack", required: true },
+    {
+      label: "Tech Stack/Tools",
+      name: "tech_stack",
+      type: "creatable-select",
+      defaultValue: uniqueTechStack[0]?.label,
+      options: uniqueTechStack
+    },
     { label: "Output/Deliverables", name: "output", required: true },
     { label: "Salary", name: "salary", type: "number", required: true },
     {
       label: "Status",
       name: "status",
       type: "select",
-      defaultValue: "In Progress",
+      defaultValue: "In_Progress",
       options: [
         { label: "In Progress", value: "In_Progress" },
         { label: "Pending Payment", value: "Pending_Payment" },
-        { label: "Complete", value: "Complete" },
+        { label: "Complete", value: "Complete" }
       ],
     },
     { label: "Link Project", name: "link_project", type: "url", required: true }
