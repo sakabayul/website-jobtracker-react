@@ -1,8 +1,11 @@
+import React from "react";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import ComponentHeaderTitle from '../ComponentHeaderTitle';
 
 const PageMainC = ({ data }) => {
+  const [isVisible, setIsVisible] = React.useState(false);
+
   const chartSeries1 = () => {
     const summary = {};
     const fetchData = data.jobs;
@@ -172,10 +175,16 @@ const PageMainC = ({ data }) => {
     };
   }
 
+  React.useEffect(() => {
+    setIsVisible(true); // Mengubah state menjadi true setelah halaman dimuat
+  }, []);
+
   return (
     <>
       <ComponentHeaderTitle title="Monitoring Applied Jobs" description="" />
-      <div className="flex flex-wrap gap-2">
+      <div className={`flex flex-wrap gap-2 transition-all duration-500 ease-in-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
+      }`}>
         <div className="bg-gray-800 p-4 rounded-lg w-[calc(100%-0.25rem)] sm:w-[calc(50%-0.25rem)] lg:w-[calc(33%-0.375rem)]">
           <HighchartsReact highcharts={Highcharts} options={chartSeries1()} />
         </div>

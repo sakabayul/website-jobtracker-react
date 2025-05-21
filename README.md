@@ -1,12 +1,68 @@
-# React + Vite
+# 💼 Job & Project Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Website ini membantu kamu dalam **melacak proses rekrutmen** dan **mengelola proyek-proyek** yang sedang dikerjakan, dengan tampilan yang interaktif dan penyimpanan lokal menggunakan **LocalStorage**. Cocok untuk individu yang ingin memantau progress karier dan proyek secara efisien.
 
-Currently, two official plugins are available:
+![Screenshot](./assets/project-portfolio-9-1.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Sebagai seorang web developer, saya melihat adanya kebutuhan untuk melacak proses rekrutmen dan proyek secara lebih terorganisir, terutama bagi individu yang sedang mencari pekerjaan atau mengerjakan banyak proyek secara bersamaan. Karena itu, saya membangun Job & Project Tracker — sebuah aplikasi web yang ringan dan intuitif.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Getting Started
+
+### For local development
+You'll need:
+- Node.js (v18 ke atas) > Bisa diunduh dari: https://nodejs.org
+- NPM (terinstall otomatis bersama Node.js)
+- Git (opsional, jika ingin clone dari repo) > Bisa diunduh dari: https://git-scm.com
+
+### 🚀 Fitur
+
+- ✅ Tambah/Edit/Hapus data pekerjaan (job) dan proyek.
+- 📊 Dashboard statistik posisi pekerjaan dan status proyek.
+- 📅 Tampilan kalender (FullCalendar) untuk melihat jadwal interview atau deadline proyek.
+- 🔍 Fitur filter berdasarkan tanggal.
+- 📈 Chart visualisasi data menggunakan **Highcharts**.
+- 📦 Penyimpanan data menggunakan **LocalStorage** (tanpa database/back-end).
+- ⚡ UI responsif menggunakan **Tailwind CSS**.
+- 💬 Komponen input seperti dropdown `Creatable` dengan pilihan custom.
+
+---
+
+### 🛠️ Teknologi
+
+- **React** + **Vite**
+- **Tailwind CSS**
+- **Highcharts**
+- **React Select** (Creatable Select)
+- **FullCalendar**
+- **LocalStorage API**
+
+---
+
+### 📂 Local Development
+
+Clone repository:
+
+```bash
+git clone https://github.com/username/job-tracker.git
+cd job-tracker
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Jalankan development server:
+
+```bash
+npm run dev
+```
+
+Buka di browser:
+
+```bash
+http://localhost:5173/
+```

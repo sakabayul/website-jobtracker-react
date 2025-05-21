@@ -34,7 +34,7 @@ const ComponentTable = ({ columns, data }) => {
     return () => clearTimeout(timeout);
   }, [location.pathname]); // Trigger ulang saat path berubah
   return (
-    <div className={`mx-auto pb-8 w-full max-w-7xl transition-all duration-800 ease-in-out ${
+    <div className={`mx-auto pb-8 w-full max-w-7xl transition-all duration-500 ease-in-out ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       }`}>
       <div className='overflow-x-auto'>

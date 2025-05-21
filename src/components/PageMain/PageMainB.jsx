@@ -150,15 +150,19 @@ const PageMainB = ({ data }) => {
   return (
     <>
       <ComponentHeaderTitle title="Monitoring" description="" />
-      <div className={`flex flex-wrap gap-2 transition-all duration-800 ease-in-out ${
+      <div className={`flex flex-wrap gap-2 transition-all duration-500 ease-in-out ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
       }`}>
-        <div className="bg-gray-800 p-4 rounded-lg w-[calc(100%-0.25rem)] lg:w-[calc(50%-0.375rem)]">
-          <HighchartsReact highcharts={Highcharts} options={chartSeries1()} />
-        </div>
-        <div className="bg-gray-800 p-4 rounded-lg w-[calc(100%-0.25rem)] lg:w-[calc(50%-0.375rem)]">
-          <HighchartsReact highcharts={Highcharts} options={chartSeries2()} />
-        </div>
+        {data.jobs.length > 0 && (
+          <div className="bg-gray-800 p-4 rounded-lg w-[calc(100%-0.25rem)] lg:w-[calc(50%-0.375rem)]">
+            <HighchartsReact highcharts={Highcharts} options={chartSeries1()} />
+          </div>
+        )}
+        {data.projects.length > 0 && (
+          <div className="bg-gray-800 p-4 rounded-lg w-[calc(100%-0.25rem)] lg:w-[calc(50%-0.375rem)]">
+            <HighchartsReact highcharts={Highcharts} options={chartSeries2()} />
+          </div>
+        )}
       </div>
     </>
   );

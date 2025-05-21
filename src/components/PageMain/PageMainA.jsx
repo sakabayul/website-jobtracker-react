@@ -38,7 +38,7 @@ const PageMainA = ({ data }) => {
   }, [location.pathname]); // Trigger ulang saat path berubah
   return (
     <>
-      <div className={`flex flex-col transition-all duration-800 ease-in-out ${
+      <div className={`flex flex-col transition-all duration-500 ease-in-out ${
         isVisible? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       }`}>
         <ComponentStatsData stats={stats} />
