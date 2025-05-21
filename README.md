@@ -2,7 +2,7 @@
 
 Website ini membantu kamu dalam **melacak proses rekrutmen** dan **mengelola proyek-proyek** yang sedang dikerjakan, dengan tampilan yang interaktif dan penyimpanan lokal menggunakan **LocalStorage**. Cocok untuk individu yang ingin memantau progress karier dan proyek secara efisien.
 
-![Screenshot](https://raw.githubusercontent.com/sakabayul/job-list_deploy/main/public/assets/project-portfolio-9-1.png)
+![Screenshot](https://raw.githubusercontent.com/sakabayul/job-list_deploy/refs/heads/main/public/assets/project-portfolio-9-1.png)
 
 Sebagai seorang web developer, saya melihat adanya kebutuhan untuk melacak proses rekrutmen dan proyek secara lebih terorganisir, terutama bagi individu yang sedang mencari pekerjaan atau mengerjakan banyak proyek secara bersamaan. Karena itu, saya membangun Job & Project Tracker — sebuah aplikasi web yang ringan dan intuitif.
 
